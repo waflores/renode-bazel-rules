@@ -1,5 +1,5 @@
 bazel-*
-.bazelrc
+.bazelrc.user
 
 examples/*/*.log
 MODULE.bazel.lock
