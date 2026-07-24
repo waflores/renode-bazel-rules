@@ -1,8 +1,11 @@
+# Renode toolchain definitions.
+"""Renode toolchain definitions."""
+
 RenodeRuntimeInfo = provider(
     fields = {
+        "files": "All runtime files",
         "renode": "Path to Renode",
         "renode_test": "Path to Renode test wrapper",
-        "files": "All runtime files",
     },
 )
 

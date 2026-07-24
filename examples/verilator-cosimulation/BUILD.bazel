@@ -2,9 +2,9 @@ load("@rules_renode//renode:defs.bzl", "renode_interactive", "renode_test")
 
 common_variables = {
     "bin": "@bin//file",
-    "rootfs": "@rootfs//file",
-    "dtb": "@dtb//file",
     "dma_verilated": "//dpi-verilator-cosimulation:verilated",
+    "dtb": "@dtb//file",
+    "rootfs": "@rootfs//file",
 }
 
 renode_test(

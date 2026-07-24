@@ -1,9 +1,12 @@
+# Renode extension for managing Renode runtimes and toolchains.
+"""Extension for managing Renode runtimes and toolchains."""
+
 load("@bazel_tools//tools/build_defs/repo:local.bzl", "new_local_repository")
 
 _DEFAULT_PORTABLE_RENODE = {
     "name": "renode_default_toolchain",
-    "url": "https://builds.renode.io/renode-1.15.3+20250530git063124cbc.linux-portable-dotnet.tar.gz",
     "sha256": "f4c7a4c5b7d852c633be0a309698cae34c3e0c4c801678d60c314d82597b26d4",
+    "url": "https://builds.renode.io/renode-1.15.3+20250530git063124cbc.linux-portable-dotnet.tar.gz",
 }
 
 def _portable_renode_toolchain_repository_impl(repository_ctx):
@@ -93,11 +96,11 @@ def _renode_toolchains_repository(repository_ctx):
 portable_renode_repository = repository_rule(
     implementation = _portable_renode_toolchain_repository_impl,
     attrs = {
+        "build_file_content": attr.string(),
+        "sha256": attr.string(),
         "url": attr.string(
             mandatory = True,
         ),
-        "sha256": attr.string(),
-        "build_file_content": attr.string(),
     },
 )
 
@@ -114,8 +117,8 @@ _download_portable = tag_class(
     doc = "Downloads a portable Renode to a repository of the passed name",
     attrs = {
         "name": attr.string(),
-        "url": attr.string(),
         "sha256": attr.string(),
+        "url": attr.string(),
     },
 )
 

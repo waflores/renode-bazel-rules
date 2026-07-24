@@ -1,5 +1,6 @@
 load("@rules_hdl//verilator:defs.bzl", "verilator_cc_library")
 load("@rules_hdl//verilog:defs.bzl", "verilog_library")
+load("@rules_cc//cc:defs.bzl", "cc_binary", "cc_library")
 
 package(default_visibility = ["//visibility:public"])
 

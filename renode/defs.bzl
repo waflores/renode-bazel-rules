@@ -1,3 +1,5 @@
+"""Provides Bazel rules for running Robot Framework tests and interactive Renode sessions."""
+
 load("@renode_test_python_deps//:requirements.bzl", "all_requirements")
 
 RENODE_TOOLCHAIN_TYPE = "@rules_renode//renode:toolchain_type"
@@ -42,7 +44,7 @@ set +e
 {command}
 RESULT=$?
 {after_script}
-""".format(command=robot_command, after_script="\n".join(after_script), vars=vars)
+""".format(command = robot_command, after_script = "\n".join(after_script), vars = vars)
     if allowed_to_fail:
         command += """
 if [ $RESULT -ne 0 ]; then
@@ -167,33 +169,33 @@ renode_test = rule(
     implementation = _renode_test_impl,
     test = True,
     attrs = {
-        "robot_test": attr.label(
+        "_bash_runfiles": attr.label(
             allow_single_file = True,
-            mandatory = True,
+            default = Label("@bazel_tools//tools/bash/runfiles"),
         ),
-        "deps": attr.label_list(
+        "_python_deps": attr.label_list(
             allow_files = True,
-            doc = "Dependencies available in the runtime",
-        ),
-        "variables_with_label": attr.string_keyed_label_dict(
-            doc = "Variables containing Label or File passed to the Robot test",
-            allow_files = True,
+            default = all_requirements,
+            providers = [PyInfo],
         ),
         "additional_arguments": attr.string_list(
             doc = "Additional arguments passed to renode-test",
         ),
         "after_script": attr.string_list(
-            doc = "Additional actions appended to wrapper script after running renode-test",
             default = [""],
+            doc = "Additional actions appended to wrapper script after running renode-test",
         ),
-        "_python_deps": attr.label_list(
-            default = all_requirements,
+        "deps": attr.label_list(
             allow_files = True,
-            providers = [PyInfo],
+            doc = "Dependencies available in the runtime",
         ),
-        "_bash_runfiles": attr.label(
-            default = Label("@bazel_tools//tools/bash/runfiles"),
+        "robot_test": attr.label(
             allow_single_file = True,
+            mandatory = True,
+        ),
+        "variables_with_label": attr.string_keyed_label_dict(
+            allow_files = True,
+            doc = "Variables containing Label or File passed to the Robot test",
         ),
     },
     toolchains = [
@@ -250,8 +252,9 @@ renode_interactive = rule(
     implementation = _renode_interactive_impl,
     executable = True,
     attrs = {
-        "resc": attr.label(
+        "_bash_runfiles": attr.label(
             allow_single_file = True,
+            default = Label("@bazel_tools//tools/bash/runfiles"),
         ),
         "arguments": attr.string_list(
             doc = "Arguments passed to Renode",
@@ -260,16 +263,15 @@ renode_interactive = rule(
             allow_files = True,
             doc = "Dependencies available in the runtime",
         ),
-        "variables_with_label": attr.string_keyed_label_dict(
-            doc = "Variables containing Label or File that need to be expanded by Bazel",
-            allow_files = True,
+        "resc": attr.label(
+            allow_single_file = True,
         ),
         "variables": attr.string_dict(
             doc = "Variables passed to Renode. Quotation is needed if they contain whitespaces",
         ),
-        "_bash_runfiles": attr.label(
-            default = Label("@bazel_tools//tools/bash/runfiles"),
-            allow_single_file = True,
+        "variables_with_label": attr.string_keyed_label_dict(
+            allow_files = True,
+            doc = "Variables containing Label or File that need to be expanded by Bazel",
         ),
     },
     toolchains = [
